@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<manifest xmlns="http://tizen.org/ns/packages" api-version="3.0" package="il.co.ynet" version="1.0.0">
+    <author email="yardenm15@gmail.com">Amit Booblil and Yarden Meshulam</author>
+    <description>Ynet news app</description>
+    <profile name="wearable"/>
+    <ui-application appid="il.co.ynet" exec="ynet" multiple="false" nodisplay="false" taskmanage="true" type="capp">
+        <label>ynet</label>
+        <icon>ynet.png</icon>
+    </ui-application>
+    <privileges>
+        <privilege>http://tizen.org/privilege/mediastorage</privilege>
+        <privilege>http://tizen.org/privilege/download</privilege>
+        <privilege>http://tizen.org/privilege/network.get</privilege>
+        <privilege>http://tizen.org/privilege/location</privilege>
+        <privilege>http://tizen.org/privilege/push</privilege>
+        <privilege>http://tizen.org/privilege/internet</privilege>
+    </privileges>
+</manifest>
