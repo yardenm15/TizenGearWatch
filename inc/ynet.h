@@ -25,6 +25,9 @@
 
 #if !defined(PACKAGE)
 #define PACKAGE "il.co.ynet"
+#define articles_url "https://www.ynet.co.il/iphone/json/0,,8,00.js"
+#define flash_url "https://www.ynet.co.il/Iphone/0,13257,SubCategory-V9-184,00.js"
+#define weather_url "https://ynetmobileservices.yit.co.il/weather/ynet/ipad"
 #endif
 
 #endif /* __ynet_H__ */

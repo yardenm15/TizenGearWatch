@@ -1,7 +1,4 @@
 #include "ynet.h"
-#define articles_url "https://www.ynet.co.il/iphone/json/0,,8,00.js"
-#define flash_url "https://www.ynet.co.il/Iphone/0,13257,SubCategory-V9-184,00.js"
-#define weather_url "https://ynetmobileservices.yit.co.il/weather/ynet/ipad"
 
 typedef struct appdata
 {
@@ -37,8 +34,7 @@ static void win_delete_request_cb(void *data, Evas_Object *obj, void *event_info
 	ui_app_exit();
 }
 
-static void app_get_full_resource_path(char *file_path);
-
+//todo: add documentation , change name with convention, print to log or return value instead of console print
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
 	size_t realsize = size * nmemb;
@@ -96,6 +92,7 @@ int download_json(char *url, void *data)
 	/* get it! */
 	res = curl_easy_perform(curl_handle);
 
+	//todo: change instead of print to dlog and maybe return value
 	/* check for errors */
 	if (res != CURLE_OK)
 	{
@@ -273,30 +270,6 @@ static void create_base_gui(appdata_s *app_data)
 	evas_object_show(app_data->main_naviframe);
 	elm_object_content_set(app_data->conformant, app_data->main_naviframe);
 
-	/* Articles Navigation Frame */
-	/* Create and initialize elm_naviframe.
-	 elm_naviframe is mandatory to iterate between different views.
-	 navigation frame acts as a stack. */
-	app_data->articles_naviframe = elm_naviframe_add(app_data->main_naviframe);
-	elm_naviframe_content_preserve_on_pop_set(app_data->articles_naviframe, EINA_TRUE);
-	evas_object_show(app_data->articles_naviframe);
-
-	/* Flash Navigation Frame */
-	/* Create and initialize elm_naviframe.
-	 elm_naviframe is mandatory to iterate between different views.
-	 navigation frame acts as a stack. */
-	app_data->flash_naviframe = elm_naviframe_add(app_data->main_naviframe);
-	elm_naviframe_content_preserve_on_pop_set(app_data->flash_naviframe, EINA_TRUE);
-	evas_object_show(app_data->flash_naviframe);
-
-	/* Weather Navigation Frame */
-	/* Create and initialize elm_naviframe.
-	 elm_naviframe is mandatory to iterate between different views.
-	 navigation frame acts as a stack. */
-	app_data->weather_naviframe = elm_naviframe_add(app_data->main_naviframe);
-	elm_naviframe_content_preserve_on_pop_set(app_data->weather_naviframe, EINA_TRUE);
-	evas_object_show(app_data->weather_naviframe);
-
 	/* Gesture layer object */
 	app_data->gesture_layer = elm_gesture_layer_add(app_data->conformant);
 	elm_gesture_layer_attach(app_data->gesture_layer, app_data->main_naviframe);
@@ -317,7 +290,7 @@ static void create_base_gui(appdata_s *app_data)
 	app_data->flash_navi_item = elm_naviframe_add(app_data->main_naviframe);
 	evas_object_show(app_data->flash_navi_item);
 
-	/* FLash Navigation Frame */
+	/* Weather Navigation Frame */
 	/* Create and initialize elm_naviframe.
 	 elm_naviframe is mandatory to iterate between different views.
 	 navigation frame acts as a stack. */
