@@ -1,4 +1,7 @@
 #include "ynet.h"
+#define articles_url "https://www.ynet.co.il/iphone/json/0,,8,00.js"
+#define flash_url "https://www.ynet.co.il/Iphone/0,13257,SubCategory-V9-184,00.js"
+#define weather_url "https://ynetmobileservices.yit.co.il/weather/ynet/ipad"
 
 typedef struct appdata
 {
@@ -18,11 +21,15 @@ typedef struct appdata
 	Elm_Object_Item *articles_navi_item;
 	Elm_Object_Item *flash_navi_item;
 	Elm_Object_Item *weather_navi_item;
+	cJSON *articles_array;
+	cJSON *flash_array;
+	cJSON *weather_array;
 } appdata_s;
 
-struct MemoryStruct {
-  char *memory;
-  size_t size;
+struct MemoryStruct
+{
+	char *memory;
+	size_t size;
 };
 
 static void win_delete_request_cb(void *data, Evas_Object *obj, void *event_info)
@@ -47,41 +54,19 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
 
 	memcpy(&(mem->memory[mem->size]), contents, realsize);
 	mem->size += realsize;
-	mem->memory[mem->size] = 0;
-	app_get_shared_resource_path();
-
-	char *buf;
-	char *a = app_get_data_path();
-	char *b = app_get_shared_data_path();
-	char *c = app_get_shared_resource_path();
-	char *d = app_get_resource_path();
-	char *e = app_get_external_shared_data_path();
-	char *f = app_get_shared_trusted_path();
-	char blah[256] = "out.txt";
-
-	char full_path[256] = "";
-	strcat(full_path, a);
-	strcat(full_path, blah);
-
-	FILE *fp = fopen(full_path, "wb+");
-	int r = fputs(mem->memory, fp);
-	for(int i=0; i<(strlen(mem->memory)/20); i++){
-		char cur [21];
-		memcpy( cur, &mem->memory[i*20], 20 );
-		cur[20] = '\0';
-		dlog_print(DLOG_DEBUG, LOG_TAG, cur);
-	}
-	fclose(fp);
+	mem->memory[mem->size] = "\0";
 
 	return realsize;
 }
 
-int mytest(char *url)
+int download_json(char *url, void *data)
 {
 	CURL *curl_handle;
 	CURLcode res;
 
 	struct MemoryStruct chunk;
+
+	appdata_s *app_data = data;
 
 	chunk.memory = malloc(1); /* will be grown as needed by the realloc above */
 	chunk.size = 0; /* no data at this point */
@@ -92,7 +77,7 @@ int mytest(char *url)
 	curl_handle = curl_easy_init();
 
 	/* specify URL to get */
-	curl_easy_setopt(curl_handle, CURLOPT_URL, "https://www.ynet.co.il/Iphone/0,13257,SubCategory-V9-184,00.js");
+	curl_easy_setopt(curl_handle, CURLOPT_URL, url);
 
 	curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0);
 
@@ -130,27 +115,23 @@ int mytest(char *url)
 	/* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);
 
+	cJSON *root = cJSON_Parse(chunk.memory);
+
+	if(url == articles_url){
+		app_data->articles_array = cJSON_GetObjectItem(root, "components");
+	}
+	else if(url == flash_url){
+		app_data->flash_array = cJSON_GetObjectItem(root->child->child, "item");
+	}
+	else if(url == weather_url){
+		app_data->weather_array = cJSON_GetObjectItem(root->child, "items");
+	}
+
 	free(chunk.memory);
 
 	/* we're done with libcurl, so clean it up */
 	curl_global_cleanup();
 	return 0;
-}
-
-int mytest2()
-{
-	char buf[2048] = {0};
-	char *a = app_get_data_path();
-	char *f = app_get_shared_trusted_path();
-	char blah[256] = "out.txt";
-	char full_path[256] = "";
-	strcat(full_path, a);
-	strcat(full_path, blah);
-
-	FILE *fp = fopen(full_path, "rb");
-	int fg = fgets(buf, 2048, fp);
-	fclose(fp);
-
 }
 
 /**
@@ -398,6 +379,10 @@ static bool app_create(void *data)
 	 If this function returns false, the application is terminated */
 	appdata_s *app_data = data;
 
+	int article = download_json(articles_url, app_data);
+	int flash = download_json(flash_url, app_data);
+	int weather = download_json(weather_url, app_data);
+
 	create_base_gui(app_data);
 
 	/* Call back for rotary event */
@@ -414,6 +399,7 @@ static void app_control(app_control_h app_control, void *data)
 static void app_pause(void *data)
 {
 	/* Take necessary actions when application becomes invisible. */
+
 }
 
 static void app_resume(void *data)
@@ -470,9 +456,6 @@ int main(int argc, char *argv[])
 	event_callback.pause = app_pause;
 	event_callback.resume = app_resume;
 	event_callback.app_control = app_control;
-
-	int ok = mytest("https://www.ynet.co.il/Iphone/0,13257,SubCategory-V9-184,00.js");
-	mytest2();
 
 	ui_app_add_event_handler(&handlers[APP_EVENT_LOW_BATTERY], APP_EVENT_LOW_BATTERY, ui_app_low_battery, &ad);
 	ui_app_add_event_handler(&handlers[APP_EVENT_LOW_MEMORY], APP_EVENT_LOW_MEMORY, ui_app_low_memory, &ad);

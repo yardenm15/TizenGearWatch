@@ -15,6 +15,8 @@
 #include <net_connection.h>
 
 #include <http.h>
+#include "cJSON_Utils.h"
+#include "cJSON.h"
 
 #ifdef  LOG_TAG
 #undef  LOG_TAG

@@ -4,7 +4,7 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="bin%2Fynet">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>SYLy7M+BulIydFPyHLB35YVKiRlX3g9F6bu23nz1Yj0=</DigestValue>
+<DigestValue>ZKhRIX7JTukfZf71q7izKzZ5cKDRGFJc2X6uVVFgNGY=</DigestValue>
 </Reference>
 <Reference URI="res%2Fimg%2Fmain%2Fmain_articles.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -75,9 +75,9 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-SG+3ZrRmW16jM6XjXc+R2ebGuXDAX2vCOJ2vfI2aUj2981LaS6HToBuL1dokWFNUCosBMt/pEYy/
-/0Hx6cpiiXl5opMrEk1KmonhVzMJPIqIiXihv/rmpE/YJkzCWKVGEwmwXh0KHDfZONLcWMBLHAAN
-v9Wl98GC9iPFsb0bRPY=
+I672mYNeZjO0SzqhDJpWM9j9qMFCHBMNiSREeKRLsFaAznXalabjb0XbPLoeYkLzIfX0IWZVNVUw
+PCR+3KNF/tsspLqDY/KaDn1g2GB1S8XPTKy8ZzUkf1OlYqYirTJYZ8ljDYnSKZcLJoGKiP0fGjdm
+K2b2CFiUcHAwXpIpb8c=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
